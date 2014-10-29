@@ -1,6 +1,7 @@
 
 #include "Bullet.h"
 
+
 Bullet::Bullet()
 {
 
@@ -28,17 +29,17 @@ Bullet* Bullet::create(bulletType type)
 bool Bullet::init(bulletType type)
 {
 	m_pBullet = Sprite::createWithSpriteFrameName(s_bulletAttr[type].sImage);
+	this->addChild(m_pBullet);
+
 	m_nDamage = s_bulletAttr[type].nDamage;
 	m_fSpeed = s_bulletAttr[type].fSpeed;
-
-	this->addChild(m_pBullet);
 
 	return true;
 }
 
-Rect Bullet::getBoundingBoxInGL()
+Rect Bullet::getBoundingBox() const
 {
 	auto rc = m_pBullet->getBoundingBox();
-	auto pos = this->convertToWorldSpace(rc.origin);
-	return Rect(pos.x, pos.y, rc.size.width, rc.size.height);
+	auto org = this->convertToWorldSpace(rc.origin);
+	return Rect(org.x, org.y, rc.size.width, rc.size.height);
 }

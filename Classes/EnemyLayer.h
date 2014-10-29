@@ -14,7 +14,7 @@ CC_CONSTRUCTOR_ACCESS:
 
 	void setEnemyPos(Enemy* enemy);
 
-	void runEnemyAct(Enemy* enemy, int nSpeed);
+	void runEnemyAct(Enemy* enemy);
 
 
 public:
@@ -24,6 +24,7 @@ public:
 
 	void addEnemy1(float interval);
 	void addEnemy2(float interval);
+	void addEnemy3(float interval);
 
 	void removeEnemys(Node* pNode);
 

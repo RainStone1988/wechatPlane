@@ -3,8 +3,8 @@
 #include "HeroLayer.h"
 #include "BulletLayer.h"
 #include "EnemyLayer.h"
-#include "GameOverLayer.h"
 #include "ControlLayer.h"
+#include "UFOLayer.h"
 
 GameLayer::GameLayer()
 	: m_pBackground1(NULL)
@@ -39,13 +39,8 @@ bool GameLayer::init()
 	}
 
 	auto winSize = Director::getInstance()->getWinSize();
-
-	// 加载游戏资源
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("shoot_background.plist");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("shoot.plist");
-
-
-	// 加载游戏背景
+	
+	// background
 	m_pBackground1 = Sprite::createWithSpriteFrameName("background.png");
 	this->addChild(m_pBackground1);
 
@@ -59,14 +54,14 @@ bool GameLayer::init()
 	m_pBackground2->setAnchorPoint(Vec2::ZERO);
 	m_pBackground2->setPosition(0, bg1Size.height - 2);
 
-	// 背景滚动
+	// backgroundMove
 	this->schedule(schedule_selector(GameLayer::backgroundMove), 0.01f);
 
-	// 加载hero
+	// hero
 	m_pHeroLayer = HeroLayer::create();
 	this->addChild(m_pHeroLayer);
 	
-	// 加载bullet
+	// bullet
 	m_pBulletLayer = BulletLayer::create();
 	this->addChild(m_pBulletLayer);
 
@@ -74,9 +69,13 @@ bool GameLayer::init()
 	m_pEnemyLayer = EnemyLayer::create();
 	this->addChild(m_pEnemyLayer);
 
-	//
+	// Control
 	m_pControlLayer = ControlLayer::create();
 	this->addChild(m_pControlLayer);
+
+	// UFO
+	m_pUFOLayer = UFOLayer::create();
+	this->addChild(m_pUFOLayer);
 
 
 	// 每帧更新
@@ -109,8 +108,28 @@ void GameLayer::gameUpdate(float interval)
 
 	if (enemyCollisionHero())
 	{
-		auto back = GameOverLayer::createScene(m_nScore);
-		Director::getInstance()->replaceScene(back);
+		m_pBulletLayer->unscheduleAllSelectors();
+		m_pEnemyLayer->unscheduleAllSelectors();
+		m_pUFOLayer->unscheduleAllSelectors();
+		this->unscheduleAllSelectors();
+
+		m_pHeroLayer->blowup(m_nScore);
+	}
+
+	auto ufoDbBlt = m_pUFOLayer->getDoubleBullets();
+	if (NULL == ufoDbBlt)
+	{
+		return;
+	}
+
+	auto doulbeBulletsBox = ufoDbBlt->getBoundingBox();
+	auto heroBox = m_pHeroLayer->getHero()->getBoundingBox();
+	if (heroBox.intersectsRect(doulbeBulletsBox))
+	{
+		m_pUFOLayer->removeDoubleBullets(m_pUFOLayer->getDoubleBullets());
+		m_pBulletLayer->stopSingleShoot();
+		m_pBulletLayer->startDoubleShoot();
+		m_pBulletLayer->startSingleShoot(6.2f);
 	}
 }
 
@@ -119,7 +138,10 @@ bool GameLayer::bulletCollisionEnemy(Bullet* bullet)
 	for (auto tagEnemy : m_pEnemyLayer->m_vecEnemys)
 	{
 		auto enemy = static_cast<Enemy*>(tagEnemy);
-		if (bullet->getBoundingBoxInGL().intersectsRect(enemy->getBoundingBoxInGL()))
+		auto emyBox = enemy->getBoundingBox();
+		auto bltBox = bullet->getBoundingBox();
+
+		if (bltBox.intersectsRect(emyBox))
 		{
 			auto life = enemy->getLife() - bullet->getDamage();
 
@@ -150,19 +172,21 @@ bool GameLayer::bulletCollisionEnemy(Bullet* bullet)
 
 bool GameLayer::enemyCollisionHero()
 {
-	for (auto& tag : m_pEnemyLayer->m_vecEnemys)
+	if (m_pHeroLayer->getLiveStatus())
 	{
-		auto enemy = static_cast<Enemy*>(tag);
-		if (m_pHeroLayer->getHero()->getBoundingBox().intersectsRect(enemy->getBoundingBoxInGL()))
+		auto heroBox = m_pHeroLayer->getHero()->getBoundingBox();
+		heroBox.origin.x += 20;
+		heroBox.origin.y += 20;
+		heroBox.size.width -= 40;
+		heroBox.size.height -= 40;
+
+		for (auto& tag : m_pEnemyLayer->m_vecEnemys)
 		{
-// 			m_pEnemyLayer->removeEnemys(enemy);
-// 			m_pHeroLayer->removeHero();
-
-			m_pBulletLayer->unscheduleAllSelectors();
-			m_pEnemyLayer->unscheduleAllSelectors();
-			this->unscheduleAllSelectors();
-
-			return true;
+			auto enemy = static_cast<Enemy*>(tag);
+			if (heroBox.intersectsRect(enemy->getBoundingBox()))
+			{
+				return true;
+			}
 		}
 	}
 

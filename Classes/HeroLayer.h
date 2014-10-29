@@ -26,8 +26,13 @@ public:
 	Sprite* getHero();
 
 	void removeHero();
+	void blowup(int score);
+
+
+CC_SYNTHESIZE_READONLY(Sprite*, m_pHero, Hero)
+CC_SYNTHESIZE(bool, m_bLive, LiveStatus)
 
 private:
 	static HeroLayer*	s_pHeroLayer;
-	Sprite*		m_pHero;
+	int	m_nScore;
 };

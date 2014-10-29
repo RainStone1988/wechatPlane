@@ -3,19 +3,19 @@
 
 USING_NS_CC;
 
-class MenuLayer : public Layer
+class WelcomeLayer : public Layer
 {
 CC_CONSTRUCTOR_ACCESS:
-	MenuLayer();
+	WelcomeLayer();
 
 	virtual bool init() override;
 
 public:
-	~MenuLayer();
+	~WelcomeLayer();
 
 	static Scene* createScene();
 
-	CREATE_FUNC(MenuLayer);
+	CREATE_FUNC(WelcomeLayer);
 
-	void startGame();
+	void loadingDone(Node* pNode);
 };

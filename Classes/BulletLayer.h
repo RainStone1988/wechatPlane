@@ -16,12 +16,21 @@ public:
 
 	CREATE_FUNC(BulletLayer);
 
-	void startShoot(float interval);
+	void startSingleShoot(float delay);
+	void stopSingleShoot();
+	void addSingleBullet(float interval);
+
+	void startDoubleShoot();
+	void addDoubleBullet(float interval);
 
 	void removeBullet(Node* pNode);
 
+	void addBulletByType(bulletType);
+
 public:
 	Vector<Bullet*>		m_vecBullets;
+
+
 
 private:
 

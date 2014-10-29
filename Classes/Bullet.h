@@ -5,21 +5,24 @@ USING_NS_CC;
 
 enum bulletType
 {
-	bullet1	= 0,
-	bullet2,
+	kBullet1	= 0,
+	kBullet2,
+
+	kMax,
 };
-typedef struct _tagBulletAttribute
+
+typedef struct _tagBulletAttr
 {
-	bulletType	etype;
 	std::string	sImage;
 	int			nDamage;
 	float		fSpeed;
+
 }BulletAttr;
 
-static const BulletAttr s_bulletAttr[] = 
+static const BulletAttr s_bulletAttr[bulletType::kMax] = 
 {
-	{bulletType::bullet1, "bullet1.png", 10, 1.0f},
-	{bulletType::bullet2, "bullet2.png", 20, 1.0f}
+	{"bullet1.png",	10,	1.0f},
+	{"bullet2.png",	10,	1.0f}
 };
 
 class Bullet : public Node
@@ -30,13 +33,13 @@ CC_CONSTRUCTOR_ACCESS:
 public:
 	~Bullet();
 
-	bool init(bulletType type);
+	static Bullet* create(bulletType);
 
-	static Bullet* create(bulletType type);
+	bool init(bulletType);
 
-	Rect getBoundingBoxInGL();
-	
+	virtual Rect getBoundingBox() const;
+
 CC_SYNTHESIZE_READONLY(Sprite*, m_pBullet, Bullet)
-CC_SYNTHESIZE_READONLY(int, m_nDamage, Damage)
-CC_SYNTHESIZE_READONLY(float, m_fSpeed, Speed)
+CC_SYNTHESIZE(int, m_nDamage, Damage)
+CC_SYNTHESIZE(float, m_fSpeed, Speed)
 };

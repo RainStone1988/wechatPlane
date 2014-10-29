@@ -22,6 +22,8 @@ public:
 
 	void menuPauseCallback();
 
+	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
+
 	void updateScore(int score);
 
 CC_SYNTHESIZE_READONLY(unsigned int, m_nScore, Score)

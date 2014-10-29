@@ -37,6 +37,11 @@ bool ControlLayer::init()
 	m_pScoreItem->setColor(Color3B(143, 146, 147));
 	m_pScoreItem->setAnchorPoint(Vec2::ZERO);
 	m_pScoreItem->setPosition(pauseItemPos.x + pauseItemSize.width + 5, pauseItemPos.y);
+
+	auto keyListener = EventListenerKeyboard::create();
+	keyListener->onKeyReleased = CC_CALLBACK_2(ControlLayer::onKeyReleased, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyListener, this);
+
 	
 	return true;
 }
@@ -52,7 +57,6 @@ void ControlLayer::menuPauseCallback()
 
 		m_pNoTouchLayer = NoTouchLayer::create();
 		this->addChild(m_pNoTouchLayer);
-
 	}
 	else
 	{
@@ -62,6 +66,21 @@ void ControlLayer::menuPauseCallback()
 		Director::getInstance()->resume();
 
 		this->removeChild(m_pNoTouchLayer);
+	}
+}
+
+void ControlLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
+{
+	if (EventKeyboard::KeyCode::KEY_ESCAPE == keyCode)
+	{
+		if (Director::getInstance()->isPaused())
+		{
+			Director::getInstance()->end();
+		}
+		else
+		{
+			this->menuPauseCallback();
+		}
 	}
 }
 

@@ -8,6 +8,7 @@ class BulletLayer;
 class EnemyLayer;
 class Bullet;
 class ControlLayer;
+class UFOLayer;
 
 const int g_MAX_SCORE = 100000000;
 
@@ -41,6 +42,7 @@ private:
 	BulletLayer*	m_pBulletLayer;
 	EnemyLayer*		m_pEnemyLayer;
 	ControlLayer*	m_pControlLayer;
+	UFOLayer*		m_pUFOLayer;
 
 	int				m_nScore;
 };

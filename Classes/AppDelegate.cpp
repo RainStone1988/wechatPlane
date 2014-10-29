@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "MenuLayer.h"
+#include "WelcomeLayer.h"
 
 USING_NS_CC;
 
@@ -16,13 +16,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        //glview = GLView::create("My Game");
-		glview = GLView::createWithRect("wechatPlane", cocos2d::Rect(0, 0, 480, 640));
+		glview = GLView::create("wechatPlane");
         director->setOpenGLView(glview);
     }
 
+	//director->setContentScaleFactor();
+	glview->setDesignResolutionSize(480, 640, ResolutionPolicy::FIXED_WIDTH);
+	
+
     // turn on display FPS
-    director->setDisplayStats(true);
+    //director->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
@@ -34,7 +37,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	FileUtils::getInstance()->setSearchResolutionsOrder(paths);
 
     // create a scene. it's an autorelease object
-	auto scene = MenuLayer::createScene();
+	auto scene = WelcomeLayer::createScene();
 
     // run
     director->runWithScene(scene);

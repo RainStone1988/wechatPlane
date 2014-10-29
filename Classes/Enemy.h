@@ -25,8 +25,8 @@ typedef struct _tagEnemyAttribute
 static const EnemyAttr s_EnemyAttr[] = 
 {
 	{enemyType::enemy1,	"enemy1.png",		10,		4.0f,	10},
-	{enemyType::enemy2,	"enemy2.png",		100,	5.5f,	100},
-	{enemyType::enemy3,	"enemy3_n1.png",	200,	7.0f,	200}
+	{enemyType::enemy2,	"enemy2.png",		80,		5.5f,	100},
+	{enemyType::enemy3,	"enemy3_n1.png",	160,	7.0f,	200}
 };
 
 
@@ -42,7 +42,7 @@ public:
 
 	static Enemy* create(enemyType type);
 
-	Rect getBoundingBoxInGL();
+	virtual Rect getBoundingBox() const;
 
 CC_SYNTHESIZE_READONLY(	Sprite*,	m_pEnemy,	Enemy)
 CC_SYNTHESIZE(			int,		m_nLife,	Life)

@@ -38,9 +38,9 @@ bool Enemy::init(enemyType type)
 	return true;
 }
 
-Rect Enemy::getBoundingBoxInGL()
+Rect Enemy::getBoundingBox() const
 {
 	auto rc = m_pEnemy->getBoundingBox();
-	auto pos = this->convertToWorldSpace(rc.origin);
-	return Rect(pos.x, pos.y, rc.size.width, rc.size.height);
+	auto org = this->convertToWorldSpace(rc.origin);
+	return Rect(org.x, org.y, rc.size.width, rc.size.height);
 }
